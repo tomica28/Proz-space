@@ -5,10 +5,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import model.SpaceButton;
-import model.SpaceSubscene;
+import model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,9 @@ public class ViewManager {
     private SpaceSubscene sceneToHide;
 
     List<SpaceButton> menuButtons;
+
+    List<ShipPicker> shipsList;
+    private SHIP choosenShip;
 
     public ViewManager() {
         menuButtons = new ArrayList<>();
@@ -62,8 +65,51 @@ public class ViewManager {
         scoreSubscene = new SpaceSubscene();
         mainPane.getChildren().add(scoreSubscene);
 
+        createShipChooserSubscene();
+    }
+
+    private void createShipChooserSubscene() {
         shipChooserSubscene = new SpaceSubscene();
         mainPane.getChildren().add(shipChooserSubscene);
+
+        InfoLabel chooseShipLabel = new InfoLabel("CHOOSE YOUR SHIP");
+        chooseShipLabel.setLayoutX(110);
+        chooseShipLabel.setLayoutY(25);
+        shipChooserSubscene.getPane().getChildren().add(chooseShipLabel);
+        shipChooserSubscene.getPane().getChildren().add(createShipToChoose());
+        shipChooserSubscene.getPane().getChildren().add(createStartGameButton());
+
+
+    }
+
+    private HBox createShipToChoose() {
+        HBox box = new HBox();
+        box.setSpacing(20);shipsList = new ArrayList<>();
+        for(SHIP ship : SHIP.values()) {
+            ShipPicker shipToPick = new ShipPicker(ship);
+            shipsList.add(shipToPick);
+            box.getChildren().add(shipToPick);
+            shipToPick.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    for(ShipPicker ship : shipsList) {
+                        ship.setIsCircleChoosen(false);
+                    }
+                    shipToPick.setIsCircleChoosen(true);
+                    choosenShip = shipToPick.getShip();
+                }
+            });
+        }
+        box.setLayoutX(300 - (118*2));
+        box.setLayoutY(100);
+        return box;
+    }
+
+    private SpaceButton createStartGameButton() {
+        SpaceButton startButton = new SpaceButton("START");
+        startButton.setLayoutX(350);
+        startButton.setLayoutY(300);
+        return startButton;
     }
 
     private void showSubscene(SpaceSubscene subscene) {

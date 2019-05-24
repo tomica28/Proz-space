@@ -6,9 +6,13 @@ public enum SHIP {
     ORANGE("view/resources/shipchooser/orange_ship.png"),
     RED("view/resources/shipchooser/red_ship.png");
 
-    String urlShip;
+    private String urlShip;
 
     private SHIP(String urlShip){
         this.urlShip = urlShip;
+    }
+
+    public String getUrl() {
+        return this.urlShip;
     }
 }
