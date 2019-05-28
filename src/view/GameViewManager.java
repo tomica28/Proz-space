@@ -24,6 +24,7 @@ public class GameViewManager {
     private static final int GAME_HEIGHT = 800;
     private double time = 0;
     private double shootingTime = 1;
+    private int ENEMIES_IN_LANE = 4;
 
     private Stage menuStage;
 
@@ -39,7 +40,7 @@ public class GameViewManager {
     private final static String BLACK_ENEMY_IMAGE = "view/resources/enemyBlack.png";
     private final static String GREEN_ENEMY_IMAGE = "view/resources/enemyGreen.png";
     private List<Sprite> sprites;
-    private final static int ENEMY_XPOSITION = 30;
+    private final static int ENEMY_XPOSITION = 40;
     private final static int ENEMY_YPOSITION = 30;
 
     private List<Sprite> bullets;
@@ -114,6 +115,7 @@ public class GameViewManager {
                 moveBackground();
                 moveShip();
                 shooting();
+                moveEnemies();
                 endingGame();
             }
         };
@@ -167,27 +169,63 @@ public class GameViewManager {
 
     private void createEnemies() {
         //creating first lane of enemies
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < ENEMIES_IN_LANE; i++) {
             Sprite enemy = new Sprite(BLACK_ENEMY_IMAGE, "enemy");
             GamePane.getChildren().add(enemy);
-            enemy.setLayoutX(ENEMY_XPOSITION + 110*i);
+            enemy.setLayoutX(ENEMY_XPOSITION + 140*i);
             enemy.setLayoutY(ENEMY_YPOSITION);
             sprites.add(enemy);
+            enemy.isMovingLeft = true;
+            enemy.isMovingRight = false;
+            enemy.setSpeed(1.5);
         }
+
         //creating second lane of enemies
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < ENEMIES_IN_LANE; i++) {
             Sprite enemy = new Sprite(GREEN_ENEMY_IMAGE, "enemy");
             GamePane.getChildren().add(enemy);
             enemy.setLayoutY(ENEMY_YPOSITION + 90);
-            enemy.setLayoutX(ENEMY_XPOSITION + 110*i);
+            enemy.setLayoutX(ENEMY_XPOSITION + 30 + 140*i);
             sprites.add(enemy);
+            enemy.isMovingRight = true;
+            enemy.isMovingLeft = false;
+            enemy.setSpeed(1.5);
+        }
+    }
+
+    private void moveEnemies() {
+        for (int i = 0; i < sprites.size() -1 ; i++) {
+            Sprite sprite = sprites.get(i+1);
+            if(sprite.isMovingLeft == true){
+                sprite.moveLeft();
+            }
+            if(sprite.isMovingRight == true) {
+                sprite.moveRight();
+            }
+        }
+        for (int i = 0; i < sprites.size() -1; i++) {
+            Sprite sprite = sprites.get(i+1);
+            if(sprite.getLayoutX() > ENEMY_XPOSITION + (i%ENEMIES_IN_LANE)*140 +40) {
+                sprite.isMovingLeft = true;
+                sprite.isMovingRight = false;
+            }
+
+            if(sprite.getLayoutX() < ENEMY_XPOSITION + (i%ENEMIES_IN_LANE)*140 - 40) {
+                sprite.isMovingRight = true;
+                sprite.isMovingLeft = false;
+            }
         }
     }
 
     private void createBullet(Sprite who) {
         Sprite bullet = new Sprite(BULLET_IMAGE, who.getType() + "bullet");
         bullet.setLayoutX(who.getLayoutX() + 45);
-        bullet.setLayoutY(who.getLayoutY());
+        if(who.getType().equals("player")) {
+            bullet.setLayoutY(who.getLayoutY());
+        } else if(who.getType().equals("enemy")) {
+            bullet.setLayoutY(who.getLayoutY() + 70);
+        }
+
         GamePane.getChildren().add(bullet);
         bullets.add(bullet);
     }
@@ -225,16 +263,23 @@ public class GameViewManager {
             } else {
                 probability = 0.1;
             }
+
+            if((sprites.indexOf(s) + ENEMIES_IN_LANE <= sprites.size() -1 && sprites.get(sprites.indexOf(s) + ENEMIES_IN_LANE).getDead() != false) || sprites.indexOf(s) + ENEMIES_IN_LANE > sprites.size()-1) {
                 if (Math.random() < probability) {
                     createBullet(s);
                 }
+            }
 
         });
         for (Iterator<Sprite> iterator = sprites.iterator(); iterator.hasNext();) {
             Sprite sprite = iterator.next();
             if(sprite.getDead() == true) {
+                Sprite emptyEnemy = new Sprite(BLACK_ENEMY_IMAGE, "emptyenemy");
+                emptyEnemy.setDead(true);
+                emptyEnemy.setVisible(false);
+                emptyEnemy.setLayoutX(1024);
+                sprites.set(sprites.indexOf(sprite), emptyEnemy);
                 GamePane.getChildren().remove(sprite);
-                iterator.remove();
             }
         }
 

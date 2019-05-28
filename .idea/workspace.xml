@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Create menu">
-      <change afterPath="$PROJECT_DIR$/src/model/Sprite.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/view/resources/bullet.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/view/resources/enemyBlack.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/view/resources/enemyGreen.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Proz-space/view/GameViewManager$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Proz-space/view/GameViewManager$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Proz-space/view/GameViewManager$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Proz-space/view/GameViewManager$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Proz-space/view/GameViewManager$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Proz-space/view/GameViewManager$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Proz-space/view/GameViewManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Proz-space/view/GameViewManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Sprite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Sprite.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/view/GameViewManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/GameViewManager.java" afterDir="false" />
     </list>
     <ignored path="JavaFxApplication.iws" />
@@ -74,7 +66,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/view/ViewManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1751">
+            <state relative-caret-position="-837">
               <caret line="116" column="72" selection-start-line="116" selection-start-column="72" selection-end-line="116" selection-end-column="72" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -86,8 +78,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/view/GameViewManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1190">
-              <caret line="70" column="42" lean-forward="true" selection-start-line="70" selection-start-column="42" selection-end-line="70" selection-end-column="42" />
+            <state relative-caret-position="-1596">
+              <caret line="179" column="30" selection-start-line="179" selection-start-column="30" selection-end-line="179" selection-end-column="30" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -135,8 +127,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model/Sprite.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="14" selection-start-column="14" selection-end-column="14" />
+            <state relative-caret-position="340">
+              <caret line="22" column="31" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -402,11 +394,12 @@
       <workItem from="1559040977197" duration="1785000" />
       <workItem from="1559042791331" duration="7613000" />
       <workItem from="1559050444167" duration="2466000" />
+      <workItem from="1559058896572" duration="8166000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="37047000" />
+    <option name="totallyTimeSpent" value="45213000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -424,7 +417,7 @@
       <window_info id="Capture Tool" order="1" />
       <window_info id="UI Designer" order="2" />
       <window_info id="Designer" order="3" />
-      <window_info content_ui="combo" id="Project" order="4" sideWeight="0.6703755" visible="true" weight="0.22587131" />
+      <window_info content_ui="combo" id="Project" order="4" sideWeight="0.6703755" visible="true" weight="0.22855228" />
       <window_info id="Structure" order="5" weight="0.25" />
       <window_info id="Favorites" order="6" />
       <window_info anchor="bottom" id="Terminal" order="0" weight="0.32956153" />
@@ -501,16 +494,6 @@
     <entry file="file://$PROJECT_DIR$/src/view/resources/enemyBlack.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/view/ViewManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1751">
-          <caret line="116" column="72" selection-start-line="116" selection-start-column="72" selection-end-line="116" selection-end-column="72" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/model/SHIP.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
@@ -539,13 +522,6 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/Sprite.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="14" selection-start-column="14" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -578,10 +554,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/ViewManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-837">
+          <caret line="116" column="72" selection-start-line="116" selection-start-column="72" selection-end-line="116" selection-end-column="72" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/Sprite.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="22" column="31" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/view/GameViewManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1190">
-          <caret line="70" column="42" lean-forward="true" selection-start-line="70" selection-start-column="42" selection-end-line="70" selection-end-column="42" />
+        <state relative-caret-position="-1596">
+          <caret line="179" column="30" selection-start-line="179" selection-start-column="30" selection-end-line="179" selection-end-column="30" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
