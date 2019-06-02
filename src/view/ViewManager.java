@@ -3,15 +3,21 @@ package view;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import model.*;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class ViewManager {
@@ -30,8 +36,11 @@ public class ViewManager {
     private SpaceSubscene scoreSubscene;
     private SpaceSubscene shipChooserSubscene;
     private SpaceSubscene gameOverSubscene;
+    private SpaceSubscene addingScoreSubscene;
 
     private SpaceSubscene sceneToHide;
+
+    private int score = 0;
 
     List<SpaceButton> menuButtons;
 
@@ -50,6 +59,7 @@ public class ViewManager {
         createBackground();
         createLogo();
         createGameOver();
+        createAddingScore();
 
 
     }
@@ -61,9 +71,34 @@ public class ViewManager {
     private void createSubscene() {
         creditsSubscene = new SpaceSubscene();
         mainPane.getChildren().add(creditsSubscene);
+        InfoLabel authorLabel1 = new InfoLabel("AUTHOR");
+        InfoLabel authorLabel2 = new InfoLabel("TOMASZ ZALUSKA");
+        authorLabel1.setLayoutX(100);
+        authorLabel1.setLayoutY(100);
+        authorLabel2.setLayoutY(160);
+        authorLabel2.setLayoutX(100);
+        creditsSubscene.getPane().getChildren().add(authorLabel1);
+        creditsSubscene.getPane().getChildren().add(authorLabel2);
+        SpaceButton okButton = new SpaceButton("OK");
+        creditsSubscene.getPane().getChildren().add(okButton);
+        okButton.setLayoutX(200);
+        okButton.setLayoutY(250);
+        okButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showSubscene(shipChooserSubscene);
+            }
+        });
 
         helpSubscene = new SpaceSubscene();
         mainPane.getChildren().add(helpSubscene);
+        InfoLabel helpLabel1 = new InfoLabel("MOVE: A-left   D-right");
+        InfoLabel helpLabel2 = new InfoLabel("SHOOT: SPACEBAR");
+        helpSubscene.getPane().getChildren().addAll(helpLabel1, helpLabel2);
+        helpLabel1.setLayoutX(100);
+        helpLabel1.setLayoutY(100);
+        helpLabel2.setLayoutX(100);
+        helpLabel2.setLayoutY(160);
 
         scoreSubscene = new SpaceSubscene();
         mainPane.getChildren().add(scoreSubscene);
@@ -121,7 +156,8 @@ public class ViewManager {
                     if (gameViewManager.getLose()){
                         showSubscene(gameOverSubscene);
                     } else {
-                        showSubscene(scoreSubscene);
+                        showSubscene(addingScoreSubscene);
+                        score = gameViewManager.getScore();
                     }
                 }
             }
@@ -172,7 +208,7 @@ public class ViewManager {
         scoreButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                showSubscene(creditsSubscene);
+                showSubscene(scoreSubscene);
             }
         });
     }
@@ -227,7 +263,7 @@ public class ViewManager {
         mainPane.getChildren().add(logo);
     }
 
-    public void createGameOver() {
+    private void createGameOver() {
         gameOverSubscene = new SpaceSubscene();
         mainPane.getChildren().add(gameOverSubscene);
         InfoLabel gameoverLabel = new InfoLabel("GAME OVER");
@@ -244,6 +280,66 @@ public class ViewManager {
                 showSubscene(shipChooserSubscene);
             }
         });
+    }
+
+    private void createAddingScore() {
+        addingScoreSubscene = new SpaceSubscene();
+        mainPane.getChildren().add(addingScoreSubscene);
+        TextField textField = new TextField();
+        HBox hBox = new HBox();
+        hBox.getChildren().add(textField);
+        textField.setPrefWidth(250);
+        textField.setPrefHeight(50);
+        try {
+            textField.setFont(Font.loadFont(new FileInputStream(new File("src/model/resources/kenvector_future.ttf")), 30));
+        } catch (FileNotFoundException e) {
+            textField.setFont(Font.font("Verdana", 15));
+        }
+        hBox.setSpacing(20);
+        addingScoreSubscene.getPane().getChildren().add(hBox);
+        hBox.setLayoutX(180);
+        hBox.setLayoutY(180);
+        InfoLabel nameLabel = new InfoLabel("ENTER YOUR NAME: ");
+        nameLabel.setLayoutX(100);
+        nameLabel.setLayoutY(100);
+        addingScoreSubscene.getPane().getChildren().add(nameLabel);
+        SpaceButton okButton = new SpaceButton("OK");
+        SpaceButton cancelButton = new SpaceButton("CANCEL");
+        addingScoreSubscene.getPane().getChildren().addAll(okButton, cancelButton);
+        okButton.setLayoutY(250);
+        okButton.setLayoutX(330);
+        cancelButton.setLayoutY(250);
+        cancelButton.setLayoutX(80);
+        final String[] name = new String[1];
+        okButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                name[0] = textField.getText();
+                addScoreToFile(score, name[0]);
+                showSubscene(shipChooserSubscene);
+            }
+        });
+        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showSubscene(shipChooserSubscene);
+            }
+        });
+
+    }
+
+
+    private void addScoreToFile(int score, String name) {
+        try {
+            PrintWriter file = new PrintWriter(new FileWriter("src/scores.txt", true));
+            file.println(name + " " + score);
+            file.close();
+        } catch (FileNotFoundException e) {
+            System.err.println("File does not exist");
+        } catch (IOException e) {
+            System.err.println("File Error");
+        }
+
     }
 
 

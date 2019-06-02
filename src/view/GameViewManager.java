@@ -394,5 +394,9 @@ public class GameViewManager {
             menuStage.show();
     }
 
+    public int getScore() {
+        return secoundPassed;
+    }
+
 }
 
