@@ -15,9 +15,7 @@ import javafx.stage.Stage;
 import model.*;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class ViewManager {
@@ -208,7 +206,12 @@ public class ViewManager {
         scoreButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                showSubscene(scoreSubscene);
+                ProcessBuilder processBuilder = new ProcessBuilder("Notepad.exe", "src/scores.txt");
+                try {
+                    processBuilder.start();
+                } catch (IOException e) {
+                    System.err.println("File error");
+                }
             }
         });
     }
@@ -331,8 +334,8 @@ public class ViewManager {
 
     private void addScoreToFile(int score, String name) {
         try {
-            PrintWriter file = new PrintWriter(new FileWriter("src/scores.txt", true));
-            file.println(name + " " + score);
+            FileWriter file = new FileWriter("src/scores.txt", true);
+            file.write(name + " " + score + "\r\n");
             file.close();
         } catch (FileNotFoundException e) {
             System.err.println("File does not exist");
