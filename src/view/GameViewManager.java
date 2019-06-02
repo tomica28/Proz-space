@@ -7,24 +7,31 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import model.GameInfoLabel;
 import model.SHIP;
 import javafx.scene.image.ImageView;
 import model.Sprite;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+
+import java.util.*;
 
 public class GameViewManager {
     private AnchorPane GamePane;
     private Stage GameStage;
     private Scene GameScene;
 
+    private static boolean lose;
+
     private static final int GAME_WIDTH = 600;
     private static final int GAME_HEIGHT = 800;
-    private double time = 0;
+    private double shootingFrequency = 0;
     private double shootingTime = 1;
     private int ENEMIES_IN_LANE = 4;
+
+    private Timer timer;
+    private TimerTask timerTask;
+    private int secoundPassed = 0;
+
 
     private Stage menuStage;
 
@@ -37,11 +44,16 @@ public class GameViewManager {
     private GridPane gridPane2;
     private final static String BACKGROUND_IMAGE = "view/resources/purple.png";
 
+    private GameInfoLabel pointsLabel;
+    private ImageView[] playerLives;
+
     private final static String BLACK_ENEMY_IMAGE = "view/resources/enemyBlack.png";
     private final static String GREEN_ENEMY_IMAGE = "view/resources/enemyGreen.png";
+    private final static String RED_ENEMY_IMAGE = "view/resources/enemyRed.png";
     private List<Sprite> sprites;
     private final static int ENEMY_XPOSITION = 40;
-    private final static int ENEMY_YPOSITION = 30;
+    private final static int ENEMY_YPOSITION = 90;
+    private int liveEnemies = 0;
 
     private List<Sprite> bullets;
     private final static String BULLET_IMAGE = "view/resources/bullet.png";
@@ -51,6 +63,8 @@ public class GameViewManager {
         createKeyListeners();
     }
 
+    public boolean getLose() { return lose; }
+
     private void initializeStage() {
         sprites = new ArrayList<>();
         bullets = new ArrayList<>();
@@ -59,6 +73,7 @@ public class GameViewManager {
         GameStage = new Stage();
         GameStage.setScene(GameScene);
     }
+
 
     private void createKeyListeners() {
         GameScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -94,14 +109,45 @@ public class GameViewManager {
         this.menuStage = menuStage;
         this.menuStage.hide();
         createBackground();
+        createGameLabel(choosenShip);
         createShip(choosenShip);
         createEnemies();
         createGameLoop();
-        GameStage.show();
+        createTimer();
+        GameStage.showAndWait();
+    }
+
+    private void createTimer() {
+        timer = new Timer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                secoundPassed++;
+            }
+        };
+        timer.scheduleAtFixedRate(timerTask, 1000, 1000);
+
+    }
+
+    private void createGameLabel(SHIP choosenShip) {
+        pointsLabel = new GameInfoLabel("TIME : 00");
+        pointsLabel.setLayoutX(460);
+        pointsLabel.setLayoutY(10);
+        GamePane.getChildren().add(pointsLabel);
+        playerLives = new ImageView[3];
+
+        for (int i = 0; i < playerLives.length; i++) {
+            playerLives[i] = new ImageView(choosenShip.getUrlLife());
+            playerLives[i].setLayoutX(455 + i*50);
+            playerLives[i].setTranslateY(65);
+            GamePane.getChildren().add(playerLives[i]);
+        }
+
     }
 
     private void createShip(SHIP choosenShip) {
         Sprite ship = new Sprite(choosenShip.getUrl(), "player");
+        ship.setLives(3);
         sprites.add(ship);
         sprites.get(0).setLayoutX(GAME_WIDTH/2);
         sprites.get(0).setLayoutY(GAME_HEIGHT-90);
@@ -112,11 +158,12 @@ public class GameViewManager {
         gameTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
+                checkingIfEnd();
                 moveBackground();
                 moveShip();
                 shooting();
+                checkingIfdead();
                 moveEnemies();
-                endingGame();
             }
         };
         gameTimer.start();
@@ -155,6 +202,8 @@ public class GameViewManager {
     }
 
     private void moveBackground() {
+        String textToSet = "TIME : ";
+        pointsLabel.setText(textToSet + secoundPassed);
         gridPane1.setLayoutY(gridPane1.getLayoutY() + 0.5);
         gridPane2.setLayoutY(gridPane2.getLayoutY() + 0.5);
 
@@ -174,10 +223,12 @@ public class GameViewManager {
             GamePane.getChildren().add(enemy);
             enemy.setLayoutX(ENEMY_XPOSITION + 140*i);
             enemy.setLayoutY(ENEMY_YPOSITION);
-            sprites.add(enemy);
+            enemy.setLives(3);
             enemy.isMovingLeft = true;
             enemy.isMovingRight = false;
             enemy.setSpeed(1.5);
+            sprites.add(enemy);
+            liveEnemies++;
         }
 
         //creating second lane of enemies
@@ -186,10 +237,26 @@ public class GameViewManager {
             GamePane.getChildren().add(enemy);
             enemy.setLayoutY(ENEMY_YPOSITION + 90);
             enemy.setLayoutX(ENEMY_XPOSITION + 30 + 140*i);
-            sprites.add(enemy);
+            enemy.setLives(2);
             enemy.isMovingRight = true;
             enemy.isMovingLeft = false;
-            enemy.setSpeed(1.5);
+            enemy.setSpeed(1.1);
+            sprites.add(enemy);
+            liveEnemies++;
+        }
+
+        //creating third lane of enemies
+        for (int i = 0; i < ENEMIES_IN_LANE; i++) {
+            Sprite enemy = new Sprite(RED_ENEMY_IMAGE, "enemy");
+            GamePane.getChildren().add(enemy);
+            enemy.setLayoutY(ENEMY_YPOSITION + 180);
+            enemy.setLayoutX(ENEMY_XPOSITION + 140*i);
+            enemy.setLives(1);
+            enemy.isMovingRight = false;
+            enemy.isMovingLeft = true;
+            enemy.setSpeed(0.7);
+            sprites.add(enemy);
+            liveEnemies++;
         }
     }
 
@@ -231,7 +298,7 @@ public class GameViewManager {
     }
 
     private void shooting() {
-        time += 0.016;
+        shootingFrequency += 0.016;
         shootingTime += 0.016;
         bullets.forEach(s -> {
             switch (s.getType()) {
@@ -239,7 +306,8 @@ public class GameViewManager {
                     s.moveDown();
 
                     if (s.getBoundsInParent().intersects(sprites.get(0).getBoundsInParent())) {
-                        sprites.get(0).setDead(true);
+                        sprites.get(0).setLives(sprites.get(0).getLives() - 1);
+                        GamePane.getChildren().remove(playerLives[sprites.get(0).getLives()]);
                         s.setDead(true);
                     }
                     break;
@@ -249,14 +317,14 @@ public class GameViewManager {
 
                     sprites.stream().filter(e -> e.getType().equals("enemy")).forEach(enemy -> {
                         if(s.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                            enemy.setDead(true);
+                            enemy.setLives(enemy.getLives() - 1);
                             s.setDead(true);
                         }
                     });
                     break;
             }
         });
-        sprites.stream().filter(s -> s.getType() == "enemy").filter(s -> time > 2).forEach(s -> {
+        sprites.stream().filter(s -> s.getType() == "enemy").filter(s -> shootingFrequency > 2).forEach(s -> {
             double probability;
             if ((sprites.get(0).getLayoutX() > s.getLayoutX() - 80) && (sprites.get(0).getLayoutX() < s.getLayoutX() + 80)) {
                 probability = 1;
@@ -291,13 +359,40 @@ public class GameViewManager {
             }
         }
 
-        if (time > 2) {
-            time = 0;
+        if (shootingFrequency > 2) {
+            shootingFrequency = 0;
         }
     }
 
-    private void endingGame() {
-
+    private void checkingIfdead() {
+        for (Sprite sprite : sprites) {
+            if (sprite.getLives() == 0) {
+                sprite.setDead(true);
+                if(sprite.getType().equals("enemy")) {
+                    liveEnemies--;
+                }
+            }
+        }
     }
+
+    private void checkingIfEnd() {
+        if (!sprites.get(0).getType().equals("player")) {
+            lose = true;
+            ending();
+        }
+        if(liveEnemies == 0) {
+            lose = false;
+            ending();
+        }
+    }
+
+    private void ending() {
+            timerTask.cancel();
+            timer.cancel();
+            GameStage.close();
+            gameTimer.stop();
+            menuStage.show();
+    }
+
 }
 

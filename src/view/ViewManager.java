@@ -29,6 +29,7 @@ public class ViewManager {
     private SpaceSubscene helpSubscene;
     private SpaceSubscene scoreSubscene;
     private SpaceSubscene shipChooserSubscene;
+    private SpaceSubscene gameOverSubscene;
 
     private SpaceSubscene sceneToHide;
 
@@ -36,6 +37,7 @@ public class ViewManager {
 
     List<ShipPicker> shipsList;
     private SHIP choosenShip;
+
 
     public ViewManager() {
         menuButtons = new ArrayList<>();
@@ -47,6 +49,7 @@ public class ViewManager {
         createButtons();
         createBackground();
         createLogo();
+        createGameOver();
 
 
     }
@@ -115,6 +118,11 @@ public class ViewManager {
                 if(choosenShip != null) {
                     GameViewManager gameViewManager = new GameViewManager();
                     gameViewManager.createNewGame(mainStage, choosenShip);
+                    if (gameViewManager.getLose()){
+                        showSubscene(gameOverSubscene);
+                    } else {
+                        showSubscene(scoreSubscene);
+                    }
                 }
             }
         });
@@ -217,6 +225,25 @@ public class ViewManager {
         logo.setLayoutY(-20);
 
         mainPane.getChildren().add(logo);
+    }
+
+    public void createGameOver() {
+        gameOverSubscene = new SpaceSubscene();
+        mainPane.getChildren().add(gameOverSubscene);
+        InfoLabel gameoverLabel = new InfoLabel("GAME OVER");
+        gameOverSubscene.getPane().getChildren().add(gameoverLabel);
+        gameoverLabel.setLayoutX(110);
+        gameoverLabel.setLayoutY(80);
+        SpaceButton gameoverButton = new SpaceButton("OK");
+        gameOverSubscene.getPane().getChildren().add(gameoverButton);
+        gameoverButton.setLayoutX(200);
+        gameoverButton.setLayoutY(180);
+        gameoverButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showSubscene(shipChooserSubscene);
+            }
+        });
     }
 
 
