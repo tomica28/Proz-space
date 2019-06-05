@@ -9,7 +9,7 @@ public enum SHIP {
     private String urlShip;
     private String urlLife;
 
-    private SHIP(String urlShip, String urlLife){
+    SHIP(String urlShip, String urlLife){
         this.urlShip = urlShip;
         this.urlLife = urlLife;
     }
