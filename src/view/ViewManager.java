@@ -4,8 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputControl;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -13,12 +11,16 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import model.*;
+import org.apache.log4j.Logger;
 
+import javax.swing.text.View;
 import java.io.*;
 import java.util.*;
 
 
 public class ViewManager {
+
+    private Logger logger = Logger.getLogger(ViewManager.class);
 
     private static final int WIDTH = 1024;
     private static final int HEIGHT = 768;
@@ -58,6 +60,7 @@ public class ViewManager {
         createLogo();
         createGameOver();
         createAddingScore();
+        logger.info("View Manager created");
 
 
     }
@@ -114,6 +117,7 @@ public class ViewManager {
         shipChooserSubscene.getPane().getChildren().add(chooseShipLabel);
         shipChooserSubscene.getPane().getChildren().add(createShipToChoose());
         shipChooserSubscene.getPane().getChildren().add(createStartGameButton());
+        logger.info("ShipChooser Subscene is created");
 
 
     }
@@ -185,6 +189,7 @@ public class ViewManager {
         createHelpButton();
         createCreditsButton();
         createExitButton();
+        logger.info("Buttons are created");
     }
 
     private void createStartButton() {
@@ -256,6 +261,7 @@ public class ViewManager {
         Image backgroundImage = new Image("view/resources/purple.png", 256, 256, false, true);
         BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, null);
         mainPane.setBackground(new Background(background));
+        logger.info("Background is created");
     }
 
     private void createLogo() {
@@ -264,6 +270,7 @@ public class ViewManager {
         logo.setLayoutY(-20);
 
         mainPane.getChildren().add(logo);
+        logger.info("Logo is created");
     }
 
     private void createGameOver() {
@@ -283,6 +290,7 @@ public class ViewManager {
                 showSubscene(shipChooserSubscene);
             }
         });
+        logger.info("Gameover Subscene is created");
     }
 
     private void createAddingScore() {
@@ -328,6 +336,7 @@ public class ViewManager {
                 showSubscene(shipChooserSubscene);
             }
         });
+        logger.info("AddingScore Subscene is created");
 
     }
 
@@ -337,6 +346,7 @@ public class ViewManager {
             FileWriter file = new FileWriter("src/scores.txt", true);
             file.write(name + " " + score + "\r\n");
             file.close();
+            logger.info("Adding score " + score + " " + name);
         } catch (FileNotFoundException e) {
             System.err.println("File does not exist");
         } catch (IOException e) {

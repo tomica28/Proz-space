@@ -11,11 +11,15 @@ import model.GameInfoLabel;
 import model.SHIP;
 import javafx.scene.image.ImageView;
 import model.Sprite;
+import org.apache.log4j.Logger;
 
 
 import java.util.*;
 
 public class GameViewManager {
+
+    private Logger logger = Logger.getLogger(GameViewManager.class);
+
     private AnchorPane GamePane;
     private Stage GameStage;
     private Scene GameScene;
@@ -61,9 +65,13 @@ public class GameViewManager {
     public GameViewManager() {
         initializeStage();
         createKeyListeners();
+        logger.info("GameViewManager is created");
     }
 
-    public boolean getLose() { return lose; }
+    public boolean getLose() {
+        logger.info("Game status lose: " + lose);
+        return lose;
+    }
 
     private void initializeStage() {
         sprites = new ArrayList<>();
@@ -76,6 +84,7 @@ public class GameViewManager {
 
 
     private void createKeyListeners() {
+        logger.info("Key listeners are created");
         GameScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
@@ -115,6 +124,7 @@ public class GameViewManager {
         createGameLoop();
         createTimer();
         GameStage.showAndWait();
+        logger.info("New game is created");
     }
 
     private void createTimer() {
@@ -142,6 +152,7 @@ public class GameViewManager {
             playerLives[i].setTranslateY(65);
             GamePane.getChildren().add(playerLives[i]);
         }
+        logger.info("Game label is created");
 
     }
 
@@ -152,6 +163,8 @@ public class GameViewManager {
         sprites.get(0).setLayoutX(GAME_WIDTH/2);
         sprites.get(0).setLayoutY(GAME_HEIGHT-90);
         GamePane.getChildren().add(sprites.get(0));
+        logger.info("Ship is created");
+        logger.info("Choosen ship: " + choosenShip.getUrl());
     }
 
     private void createGameLoop() {
@@ -230,6 +243,7 @@ public class GameViewManager {
             sprites.add(enemy);
             liveEnemies++;
         }
+        logger.info("First lane is created");
 
         //creating second lane of enemies
         for (int i = 0; i < ENEMIES_IN_LANE; i++) {
@@ -244,6 +258,7 @@ public class GameViewManager {
             sprites.add(enemy);
             liveEnemies++;
         }
+        logger.info("Second lane is created");
 
         //creating third lane of enemies
         for (int i = 0; i < ENEMIES_IN_LANE; i++) {
@@ -258,6 +273,7 @@ public class GameViewManager {
             sprites.add(enemy);
             liveEnemies++;
         }
+        logger.info("Third lane is created");
     }
 
     private void moveEnemies() {
@@ -292,7 +308,6 @@ public class GameViewManager {
         } else if(who.getType().equals("enemy")) {
             bullet.setLayoutY(who.getLayoutY() + 70);
         }
-
         GamePane.getChildren().add(bullet);
         bullets.add(bullet);
     }
@@ -309,6 +324,8 @@ public class GameViewManager {
                         sprites.get(0).setLives(sprites.get(0).getLives() - 1);
                         GamePane.getChildren().remove(playerLives[sprites.get(0).getLives()]);
                         s.setDead(true);
+                        logger.info("Player is hit");
+                        logger.info("Player lives: " + sprites.get(0).getLives());
                     }
                     break;
 
@@ -319,6 +336,7 @@ public class GameViewManager {
                         if(s.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
                             enemy.setLives(enemy.getLives() - 1);
                             s.setDead(true);
+                            logger.info("Enemy is hit");
                         }
                     });
                     break;
@@ -343,7 +361,7 @@ public class GameViewManager {
             Sprite sprite = iterator.next();
             if(sprite.getDead() == true) {
                 Sprite emptyEnemy = new Sprite(BLACK_ENEMY_IMAGE, "emptyenemy");
-                emptyEnemy.setDead(true);
+                emptyEnemy.setDead(false);
                 emptyEnemy.setVisible(false);
                 emptyEnemy.setLayoutX(1024);
                 sprites.set(sprites.indexOf(sprite), emptyEnemy);
@@ -370,6 +388,8 @@ public class GameViewManager {
                 sprite.setDead(true);
                 if(sprite.getType().equals("enemy")) {
                     liveEnemies--;
+                    logger.info("Enemy is dead");
+                    logger.info("Amout of enemies: " + liveEnemies);
                 }
             }
         }
@@ -377,10 +397,12 @@ public class GameViewManager {
 
     private void checkingIfEnd() {
         if (!sprites.get(0).getType().equals("player")) {
+            logger.info("Game over");
             lose = true;
             ending();
         }
         if(liveEnemies == 0) {
+            logger.info("Win");
             lose = false;
             ending();
         }
