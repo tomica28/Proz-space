@@ -361,7 +361,7 @@ public class GameViewManager {
             Sprite sprite = iterator.next();
             if(sprite.getDead() == true) {
                 Sprite emptyEnemy = new Sprite(BLACK_ENEMY_IMAGE, "emptyenemy");
-                emptyEnemy.setDead(false);
+                emptyEnemy.setDead(true);
                 emptyEnemy.setVisible(false);
                 emptyEnemy.setLayoutX(1024);
                 sprites.set(sprites.indexOf(sprite), emptyEnemy);
